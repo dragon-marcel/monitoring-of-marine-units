@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+   <head>
+      <title th:remove="all">New ship in your Area</title>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+   </head>
+   <body>
+      <div  style="width:400px;margin: auto;background:white;">
+      <p>
+         Hello, <span th:text="${username}"/>
+      </p>
+      <table role="presentation" border="1" cellspacing="0"  width="100%">
+         <tr >
+            <td colspan="2" bgcolor="#454867" align="center" style="color: white;">
+               <img alt="Ship" th:src="@{${image_ship}}" width="400px">
+            </td>
+         </tr>
+         <tr>
+            <td width="20%">Name:</td>
+            <td width="70%"> <small th:text="${name_ship}" \></td>
+         </tr>
+         <tr>
+            <td width="20%">Mmsi:</td>
+            <td width="70%"><small th:text="${name_mmsi}"\></td>
+         </tr>
+         <tr>
+            <td width="20%">Type:</td>
+            <td width="70%"><small th:text="${type_ship}"\></td>
+         </tr>
+         <tr>
+            <td width="20%">Destination:</td>
+            <td width="70%"><small th:text="${destination_ship}"\></td>
+         </tr>
+         <tr>
+            <td width="20%">Time:</td>
+            <td width="70%"><small th:text="${data_time}"\></td>
+         </tr>
+         <tr>
+            <td width="20%">Coordinate x:</td>
+            <td width="70%"><small th:text="${coordinate_x}"\></td>
+         </tr>
+         <tr>
+            <td width="20%">Coordinate y:</td>
+            <td width="70%"><small th:text="${coordinate_y}"\></td>
+         </tr>
+      </table>
+   </body>
+</html>

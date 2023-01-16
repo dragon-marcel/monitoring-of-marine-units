@@ -1,68 +1,70 @@
 package backend.Marine.units.configuration;
 
-import org.springframework.boot.context.event.ApplicationReadyEvent;
+import java.util.Arrays;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.event.EventListener;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
-import backend.Marine.units.entity.User;
-import backend.Marine.units.repository.UserRepository;
-import backend.Marine.units.service.JwtTokenFilter;
+import backend.Marine.units.jwt.AuthFailureHandler;
+import backend.Marine.units.jwt.AuthSuccessHandler;
+import backend.Marine.units.jwt.JWTAuthenticationFilter;
+import backend.Marine.units.jwt.JWTTokenFilter;
 
 @Configuration
+
 public class SecurityConfig {
-	private final UserRepository userRepo;
-	private final JwtTokenFilter jwtTokenFilter;
 
-	public SecurityConfig(JwtTokenFilter jwtTokenFilter, UserRepository userRepo) {
+	private AuthenticationManager authenticationManager;
 
+	private AuthSuccessHandler authSuccessHandler;
+
+	private AuthFailureHandler authFailureHandler;
+
+	private final JWTTokenFilter jwtTokenFilter;
+	private static final String[] AUTH_WHITELIST = { "/ws-message/**", "/ws-ships/**", "/ship/**", "/avatar/**",
+			"/h2-console/**", "/swagger-resources/**", "/swagger-ui.html", "/v2/api-docs", "/webjars/**" };
+
+	public SecurityConfig(JWTTokenFilter jwtTokenFilter, AuthenticationManager authenticationManager,
+			AuthSuccessHandler authSuccessHandler, AuthFailureHandler authFailureHandler) {
+		this.authenticationManager = authenticationManager;
+		this.authSuccessHandler = authSuccessHandler;
+		this.authFailureHandler = authFailureHandler;
 		this.jwtTokenFilter = jwtTokenFilter;
-		this.userRepo = userRepo;
-	}
-
-	@EventListener(ApplicationReadyEvent.class)
-	public void saveUser() {
-		userRepo.save(new User("Marcel", getBcryptPasswordEncoder().encode("admin123")));
 	}
 
 	@Bean
-	public UserDetailsService userDetailsService() {
+	protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		final CorsConfiguration configuration = new CorsConfiguration();
+		configuration.applyPermitDefaultValues();
+		configuration.addAllowedMethod(HttpMethod.PUT);
+		configuration.setAllowedOriginPatterns(Arrays.asList("http://localhost:3000"));
+		configuration.setAllowCredentials(true);
 
-		return username -> userRepo.findByUsername(username)
-				.orElseThrow(() -> new UsernameNotFoundException("User with username not found: " + username));
-
-	}
-
-	@Bean
-	public PasswordEncoder getBcryptPasswordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
-
-	@Bean
-	public AuthenticationManager authorizationManager(AuthenticationConfiguration authenticationConfiguration)
-			throws Exception {
-
-		return authenticationConfiguration.getAuthenticationManager();
-	}
-
-	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.csrf().disable();
-		http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
-		http.authorizeRequests().antMatchers("/auth/login", "/auth/regist").permitAll().antMatchers("/hello")
-				.hasRole("USER").anyRequest().authenticated();
+		http.cors().configurationSource(request -> configuration);
+		http.authorizeRequests().antMatchers(AUTH_WHITELIST).permitAll().antMatchers("/hello").hasRole("USER")
+				.anyRequest().authenticated().and().sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().addFilter(authenticationFilter());
+
 		http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
 		return http.build();
 
 	}
+
+	@Bean
+	public JWTAuthenticationFilter authenticationFilter() {
+		JWTAuthenticationFilter authenticationFilter = new JWTAuthenticationFilter();
+		authenticationFilter.setAuthenticationSuccessHandler(authSuccessHandler);
+		authenticationFilter.setAuthenticationFailureHandler(authFailureHandler);
+		authenticationFilter.setAuthenticationManager(authenticationManager);
+		return authenticationFilter;
+	}
+
 }

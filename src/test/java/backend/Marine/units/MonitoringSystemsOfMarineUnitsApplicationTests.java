@@ -1,4 +1,4 @@
-package wsb.Marine.units;
+package backend.Marine.units;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

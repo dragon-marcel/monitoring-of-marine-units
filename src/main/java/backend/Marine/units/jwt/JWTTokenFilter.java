@@ -1,4 +1,4 @@
-package backend.Marine.units.service;
+package backend.Marine.units.jwt;
 
 import java.io.IOException;
 import java.util.List;
@@ -21,9 +21,8 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
-
 @Component
-public class JwtTokenFilter extends OncePerRequestFilter {
+public class JWTTokenFilter extends OncePerRequestFilter {
 	@Value("${secret.key}")
 	private String KEY;
 
