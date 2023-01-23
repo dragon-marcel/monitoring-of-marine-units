@@ -7,8 +7,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,13 +23,12 @@ public class Point {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	private double xCoordinate, yCoordinate;
-	@Temporal(TemporalType.TIMESTAMP)
 	private Date createDateTime;
 
-	public Point(double xCoordinate, double yCoordinate) {
+	public Point(double xCoordinate, double yCoordinate, Date createDateTime) {
 		this.xCoordinate = xCoordinate;
 		this.yCoordinate = yCoordinate;
-		this.createDateTime = new Date();
+		this.createDateTime = createDateTime;
 	}
 
 	@Override

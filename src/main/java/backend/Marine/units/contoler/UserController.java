@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,6 +36,7 @@ public class UserController {
 		this.userRepository = userRepository;
 	}
 
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@PostMapping
 	@ApiOperation(value = "Create user")
 	public ResponseEntity<?> createUser(@RequestBody User user) {
@@ -42,6 +44,7 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@PatchMapping(value = "/{id}/{enabled}")
 	@ApiOperation(value = "Set enabled user")
 	public ResponseEntity<?> setEnabledUser(@PathVariable int id, @PathVariable boolean enabled) {

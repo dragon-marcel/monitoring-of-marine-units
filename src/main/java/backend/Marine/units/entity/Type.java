@@ -20,4 +20,8 @@ public class Type {
 	private Integer id;
 	private String description;
 
+	public Type(String description) {
+		this.description = description;
+	}
+
 }

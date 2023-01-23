@@ -38,7 +38,7 @@ public class User implements Serializable, UserDetails, ObserverShip {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 
-	@Column(nullable = false, updatable = false, unique = true)
+	@Column(nullable = false, unique = true)
 	private String username;
 
 	@Column(nullable = false)
@@ -196,7 +196,8 @@ public class User implements Serializable, UserDetails, ObserverShip {
 	@Override
 	public void sendMail(Ship ship) {
 		EmailService calc = EmailServiceContext.getContext();
-		calc.sendSimpleMessage(this, ship, "New ship("+ship.getMmsi()+") in your area", "STATEK O MMSI:" + ship.getMmsi() + "wysłany na Maila");
+		calc.sendSimpleMessage(this, ship, "New ship(" + ship.getMmsi() + ") in your area",
+				"STATEK O MMSI:" + ship.getMmsi() + "wysłany na Maila");
 
 	}
 

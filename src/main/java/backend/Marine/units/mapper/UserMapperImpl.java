@@ -10,10 +10,8 @@ public class UserMapperImpl implements UserMapper {
 
 	@Override
 	public UserDTO toUserDTO(User user) {
-		System.out.println(user.toString());
-		if (user == null) {
+		if (user == null)
 			return null;
-		}
 
 		UserDTO userDTO = new UserDTO();
 		userDTO.setId(user.getId());
@@ -28,9 +26,8 @@ public class UserMapperImpl implements UserMapper {
 
 	@Override
 	public List<UserDTO> toUserDTOs(List<User> users) {
-		if (users == null) {
+		if (users == null)
 			return null;
-		}
 
 		List<UserDTO> list = new ArrayList<UserDTO>();
 		for (User user : users) {

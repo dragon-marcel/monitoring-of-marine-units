@@ -28,8 +28,8 @@ public class SecurityConfig {
 	private AuthFailureHandler authFailureHandler;
 
 	private final JWTTokenFilter jwtTokenFilter;
-	private static final String[] AUTH_WHITELIST = { "/ws-message/**", "/ws-ships/**", "/ship/**", "/avatar/**",
-			"/h2-console/**", "/swagger-resources/**", "/swagger-ui.html", "/v2/api-docs", "/webjars/**" };
+	private static final String[] AUTH_WHITELIST = { "/ws-ships/**", "/city/**", "/ship/**", "/avatar/**",
+			"/swagger-resources/**", "/swagger-ui.html", "/v2/api-docs", "/webjars/**" };
 
 	public SecurityConfig(JWTTokenFilter jwtTokenFilter, AuthenticationManager authenticationManager,
 			AuthSuccessHandler authSuccessHandler, AuthFailureHandler authFailureHandler) {

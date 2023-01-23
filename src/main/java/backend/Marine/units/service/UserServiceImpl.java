@@ -68,6 +68,9 @@ public class UserServiceImpl implements UserService {
 		user.setAvatar(userDTO.getAvatar());
 		user.setRole(userDTO.getRole());
 		user.setEnabled(userDTO.isEnabled());
+		System.out.println(userDTO);
+
+		System.out.println(user);
 		userRepository.save(user);
 
 		if (user.isEnabled())

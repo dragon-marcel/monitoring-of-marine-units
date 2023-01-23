@@ -57,7 +57,6 @@ public class ShipController {
 	@ApiOperation(value = "Get tracked ships by username")
 	public ResponseEntity<List<Ship>> getTracketShipsByUsername(@PathVariable String username) {
 		List<Ship> ships = shipRepository.findTrackedShipsByUsername(username);
-		System.out.print("Get tracked Ship by username" + username + "results:" + ships.size());
 		return new ResponseEntity<List<Ship>>(ships, HttpStatus.OK);
 	}
 

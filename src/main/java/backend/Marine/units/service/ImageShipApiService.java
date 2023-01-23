@@ -25,7 +25,7 @@ public class ImageShipApiService {
 		@SuppressWarnings("deprecation")
 		JSONParser parser = new JSONParser();
 		JSONObject json = null;
-		String url_img = "https://localhost:443/ship/deflaut_ship.png";
+		String url_img = "https://localhost:8080/ship/deflaut_ship.png";
 		try {
 			String result = restTemplate.getForObject(url, String.class);
 			json = (JSONObject) parser.parse(result);

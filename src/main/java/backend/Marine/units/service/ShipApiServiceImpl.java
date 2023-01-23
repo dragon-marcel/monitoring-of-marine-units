@@ -70,7 +70,7 @@ public class ShipApiServiceImpl implements ShipApiService {
 		this.accessToken.set(token);
 	}
 
-	@Scheduled(fixedRate = 60000)
+	@Scheduled(fixedRate = 20000)
 	private void fetchsHipFromArea() {
 		fetchShip(getArea());
 	}
@@ -88,7 +88,7 @@ public class ShipApiServiceImpl implements ShipApiService {
 				HttpMethod.GET, new HttpEntity(httpHeaders), TrackShip[].class);
 
 		TrackShip[] tracks = exchange.getBody();
-		// System.out.println("Refresh ships: " + accessToken.get());
+		System.out.println("Refresh ships: " + tracks.length);
 
 		shipService.trackShipParsetoShips(tracks);
 	}

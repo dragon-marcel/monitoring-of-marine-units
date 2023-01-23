@@ -15,7 +15,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
@@ -35,7 +34,7 @@ public class Ship {
 	@NotNull
 	private int mmsi;
 	private String name;
-	@Transient
+	@OneToOne(cascade = CascadeType.ALL)
 	private Point currentPoint;
 	private String country;
 	private String destination;
@@ -46,7 +45,8 @@ public class Ship {
 	private boolean active;
 	@OneToOne
 	private Type type;
-
+	private Double distance;
+	private int speed;
 	@ManyToMany()
 	@JsonIgnore
 	private Set<User> trackedBy = new HashSet<>();
@@ -61,10 +61,6 @@ public class Ship {
 
 	public void addPoint(Point point) {
 		this.track.add(point);
-	}
-
-	public Point getCurrentPoint() {
-		return track.get(track.size() - 1);
 	}
 
 	public void addUser(User user) {
