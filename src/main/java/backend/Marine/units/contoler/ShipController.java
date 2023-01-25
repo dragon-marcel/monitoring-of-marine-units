@@ -28,9 +28,17 @@ public class ShipController {
 		this.shipService = shipService;
 	}
 
-	@GetMapping
+	@GetMapping()
 	@ApiOperation(value = "Get all ships")
 	public ResponseEntity<List<Ship>> getShips() {
+		List<Ship> ships = shipRepository.findAll();
+
+		return new ResponseEntity<List<Ship>>(ships, HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/area")
+	@ApiOperation(value = "Get all ships in area")
+	public ResponseEntity<List<Ship>> getShipsInArea() {
 		List<Ship> ships = shipRepository.findAllInArea();
 
 		return new ResponseEntity<List<Ship>>(ships, HttpStatus.OK);
