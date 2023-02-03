@@ -15,11 +15,15 @@ import dto.WeatherDTO;
 @Service
 public class WeatherApiService {
 	private static final String WEATHER_URL = "http://api.openweathermap.org/data/2.5/";
-	@Value("${weather.api.key}")
-	private static String OPENWEATHER_API_KEY;
+	private final String OPENWEATHER_API_KEY;
 	private RestTemplate restTemplate = new RestTemplate();
 
+	public WeatherApiService(@Value("${weather.api.key}") String APIKey) {
+		this.OPENWEATHER_API_KEY = APIKey;
+	}
+
 	public WeatherDTO getWeatherForPosition(double lat, double lon) {
+		System.out.println("OPENWEATHER_API_KEY" + OPENWEATHER_API_KEY);
 		WeatherConditions weather = callGetMethod(lat, lon);
 		return WeatherMapper.INSTANCE.toWeatherDTO(weather);
 	}
