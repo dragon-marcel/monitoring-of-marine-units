@@ -17,7 +17,7 @@ public class ShipMapperImpl implements ShipMapper {
 			return null;
 		}
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-		Date timestamp = null;
+		Date timestamp;
 		try {
 			timestamp = dateFormat.parse(track.getTimeStamp());
 		} catch (ParseException e) {

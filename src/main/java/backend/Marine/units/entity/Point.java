@@ -47,16 +47,13 @@ public class Point {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (obj == null || getClass() != obj.getClass()) {
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
+		}
 		Point other = (Point) obj;
 		if (Double.doubleToLongBits(xCoordinate) != Double.doubleToLongBits(other.xCoordinate))
 			return false;
-		if (Double.doubleToLongBits(yCoordinate) != Double.doubleToLongBits(other.yCoordinate))
-			return false;
-		return true;
+		return Double.compare(other.yCoordinate, yCoordinate) == 0;
 	}
 
 }

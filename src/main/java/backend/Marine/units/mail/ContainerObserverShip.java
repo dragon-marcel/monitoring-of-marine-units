@@ -7,12 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ContainerObserverShip {
-	private Set<ShipMailObserver> observers;
-
-	public ContainerObserverShip() {
-		this.observers = new HashSet<ShipMailObserver>();
-
-	}
+	private final Set<ShipMailObserver> observers = new HashSet<ShipMailObserver>();
 
 	public void addObserverShip(ShipMailObserver observer) {
 		observers.add(observer);

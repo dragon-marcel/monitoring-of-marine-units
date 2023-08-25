@@ -52,10 +52,9 @@ public class JWTTokenFilter extends OncePerRequestFilter {
 	}
 
 	public String resolve(String token) {
-		if (token != null && token.startsWith("Bearer")) {
+		if (token != null && token.startsWith("Bearer"))
 			return token.replace("Bearer", "");
-		} else {
+		 else
 			return token;
-		}
 	}
 }

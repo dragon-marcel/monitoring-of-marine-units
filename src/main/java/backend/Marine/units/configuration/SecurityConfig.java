@@ -21,9 +21,9 @@ import backend.Marine.units.jwt.JWTTokenFilter;
 
 public class SecurityConfig {
 
-	private AuthenticationManager authenticationManager;
-	private AuthSuccessHandler authSuccessHandler;
-	private AuthFailureHandler authFailureHandler;
+	private final AuthenticationManager authenticationManager;
+	private final AuthSuccessHandler authSuccessHandler;
+	private final AuthFailureHandler authFailureHandler;
 
 	private final JWTTokenFilter jwtTokenFilter;
 	private static final String[] AUTH_WHITELIST = { "/ws-ships/**", "/city/**", "/ship/**", "/avatar/**",

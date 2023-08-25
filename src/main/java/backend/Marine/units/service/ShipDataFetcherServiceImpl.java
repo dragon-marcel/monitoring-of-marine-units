@@ -35,7 +35,7 @@ public class ShipDataFetcherServiceImpl implements ShipDataFetcherService {
 			@Value("${security.SHIP_client_secret}") String clientSecret, ShipServiceImpl shipService) throws Exception {
 
 		if (clientId == null || clientSecret == null)
-			throw new Exception("No SHIP secret or clientId in environment.");
+			throw new IllegalArgumentException("Missing SHIP secret or id in environment.");
 
 		this.apiClientId.set(clientId);
 		this.apiSecret.set(clientSecret);
@@ -81,7 +81,6 @@ public class ShipDataFetcherServiceImpl implements ShipDataFetcherService {
 
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.add("Authorization", "Bearer " + accessToken.get());
-		HttpEntity<?> httpEntity = new HttpEntity(httpHeaders);
 		ResponseEntity<TrackShip[]> exchange = restTemplate.exchange(
 				"https://www.barentswatch.no/bwapi/v2/geodata/ais/openpositions?Xmin=" + getArea().getFromX() + "&Xmax="
 						+ getArea().getToX() + "&Ymin=" + getArea().getFromY() + "&Ymax=" + getArea().getToY(),

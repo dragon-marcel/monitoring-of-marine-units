@@ -16,9 +16,6 @@ public interface ShipRepository extends JpaRepository<Ship, Integer> {
 	@Query(value = "SELECT s FROM Ship s JOIN s.trackedBy u WHERE u.username =:username")
 	List<Ship> findTrackedShipsByUsername(String username);
 
-	@Query(value = "SELECT s FROM Ship s JOIN s.trackedBy u ")
-	List<Ship> findTrackedShips();
-
 	@Query(value = "SELECT s FROM Ship s WHERE s.inArea = true")
 	List<Ship> findAllInArea();
 

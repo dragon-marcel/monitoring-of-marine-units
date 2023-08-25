@@ -14,7 +14,6 @@ import backend.Marine.units.entity.AuthRequest;
 import backend.Marine.units.entity.AuthResponse;
 import backend.Marine.units.entity.User;
 import backend.Marine.units.jwt.JWTService;
-import backend.Marine.units.repository.UserRepository;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
@@ -24,8 +23,7 @@ public class AuthController {
 
 	private final JWTService jwtService;
 
-	public AuthController(AuthenticationManager authorizationManager, JWTService jwtService,
-			UserRepository userRepository) {
+	public AuthController(AuthenticationManager authorizationManager, JWTService jwtService){
 		this.authorizationManager = authorizationManager;
 		this.jwtService = jwtService;
 	}

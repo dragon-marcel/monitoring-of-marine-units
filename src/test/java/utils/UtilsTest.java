@@ -76,4 +76,15 @@ public class UtilsTest {
 		//then
 		assertEquals(difference,32105713);
 	}
+	@Test
+	public void should_return_zero_for_same_timestamps() {
+		//given
+		long timestamp = System.currentTimeMillis();
+
+		//when
+		double difference = Utils.getTimeDifferenceInMilliseconds(timestamp, timestamp);
+
+		//then
+		assertEquals(0, difference);
+	}
 }

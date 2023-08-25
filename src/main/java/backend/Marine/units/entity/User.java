@@ -61,7 +61,7 @@ public class User implements Serializable, UserDetails, ShipMailObserver {
 	private Date createdDate;
 
 	public User() {
-	};
+	}
 
 	public User(String username, String encodePassword, String email, String role, boolean enable, String avatar) {
 		this.username = username;
@@ -125,28 +125,12 @@ public class User implements Serializable, UserDetails, ShipMailObserver {
 		return role;
 	}
 
-	public void setRole(Role role) {
-		this.role = role;
-	}
-
 	public String getEmail() {
 		return email;
 	}
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
 	}
 
 	public void setUsername(String username) {
@@ -171,19 +155,15 @@ public class User implements Serializable, UserDetails, ShipMailObserver {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
+		if (obj == null || getClass() != obj.getClass())
 			return false;
 		User other = (User) obj;
 		if (id != other.id)
 			return false;
 		if (username == null) {
-			if (other.username != null)
-				return false;
-		} else if (!username.equals(other.username))
-			return false;
-		return true;
+			return other.username == null;
+		}
+		return username.equals(other.username);
 	}
 
 	@Override

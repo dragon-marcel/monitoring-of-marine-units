@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import backend.Marine.units.model.ErrorAPI;;
+import backend.Marine.units.model.ErrorAPI;
 
 @ControllerAdvice
 public class UserNotFoundAdvice {

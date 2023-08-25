@@ -101,9 +101,6 @@ public class ShipServiceImpl implements ShipService {
 			existingShip.setDistance(Utils.getDistance(existingShip));
 			double timeMS = Utils.getTimeDifferenceInMilliseconds(System.currentTimeMillis(),
 					(existingShip.getTrack().get(existingShip.getTrack().size() - 2).getCreateDateTime().getTime()));
-			System.out.println("TIME1:"+ System.currentTimeMillis() + "   "+ (existingShip.getTrack().get(existingShip.getTrack().size() - 2).getCreateDateTime().getTime()));
-
-			System.out.println("TIME:"+ timeMS);
 			existingShip.setSpeed(Utils.calculateSpeedInKmH(existingShip.getDistance(), timeMS));
 		}
 		return shipRepository.save(existingShip);
@@ -124,7 +121,7 @@ public class ShipServiceImpl implements ShipService {
 	}
 
 	private void sendShipsInAreaToWebSocket(List<Ship> ships) {
-		List<Ship> shipsInArea = ships.stream().filter(ship -> ship.isInArea()).collect(Collectors.toList());
+		List<Ship> shipsInArea = ships.stream().filter(Ship::isInArea).collect(Collectors.toList());
 		template.convertAndSend("/topic/ships", shipsInArea);
 	}
 

@@ -21,7 +21,9 @@ public class JWTService {
 		User user = (User) authentication.getPrincipal();
 
 		Algorithm algorithm = Algorithm.HMAC256(KEY);
-		return JWT.create().withSubject(user.getUsername()).withIssuer("MARCEL")
+		return JWT.create()
+				.withSubject(user.getUsername())
+				.withIssuer("MARCEL")
 				.withClaim("roles",
 						user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
 				.sign(algorithm);

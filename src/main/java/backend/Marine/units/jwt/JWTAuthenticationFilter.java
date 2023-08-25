@@ -24,23 +24,12 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
-		String username = obtainUsername(request);
-		String password = obtainPassword(request);
-		if (username == null) {
-			username = "";
-		}
-
-		if (password == null) {
-			password = "";
-		}
-		if (username != null && password != null && !password.equals("") && !username.equals("")) {
-		} else {
-
-			User user = null;
+		String username="";
+		String password="";
+		User user;
 			try {
 				user = new ObjectMapper().readValue(request.getInputStream(), User.class);
-				username = user.getUsername();
-
+				username = user.getUsername().trim();
 				password = user.getPassword();
 
 			} catch (JsonParseException e) {
@@ -50,8 +39,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}
-		username = username.trim();
+
 		UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
 		setDetails(request, authToken);
 		return this.getAuthenticationManager().authenticate(authToken);
