@@ -23,15 +23,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import backend.Marine.units.mail.EmailService;
 import backend.Marine.units.mail.EmailServiceContext;
-import backend.Marine.units.mail.ObserverShip;
+import backend.Marine.units.mail.ShipMailObserver;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 @Entity
 @AllArgsConstructor
 @Table(name = "users")
-public class User implements Serializable, UserDetails, ObserverShip {
+public class User implements Serializable, UserDetails, ShipMailObserver {
 
 	private static final long serialVersionUID = 1L;
 	@Id
@@ -194,10 +196,11 @@ public class User implements Serializable, UserDetails, ObserverShip {
 	}
 
 	@Override
-	public void sendMail(Ship ship) {
-		EmailService calc = EmailServiceContext.getContext();
-		calc.sendSimpleMessage(this, ship, "New ship(" + ship.getMmsi() + ") in your area",
-				"STATEK O MMSI:" + ship.getMmsi() + "wysłany na Maila");
+	public void notifyAboutShipEvent(Ship ship) {
+
+		String subject = "New ship (" + ship.getMmsi() + ") in your area";
+		EmailService emailService = EmailServiceContext.getContext();
+		emailService.sendSimpleMessage(this, ship, subject);
 
 	}
 

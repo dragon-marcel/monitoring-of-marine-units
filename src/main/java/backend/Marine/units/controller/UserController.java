@@ -1,4 +1,4 @@
-package backend.Marine.units.contoler;
+package backend.Marine.units.controller;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import backend.Marine.units.dto.UserDTO;
 import backend.Marine.units.entity.Role;
 import backend.Marine.units.entity.User;
 import backend.Marine.units.exception.UserNotFoundException;
 import backend.Marine.units.mapper.UserMapper;
 import backend.Marine.units.repository.UserRepository;
 import backend.Marine.units.service.UserService;
-import dto.UserDTO;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
@@ -46,7 +46,7 @@ public class UserController {
 
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@PatchMapping(value = "/{id}/{enabled}")
-	@ApiOperation(value = "Set enabled user")
+	@ApiOperation("Set user's enabled status")
 	public ResponseEntity<?> setEnabledUser(@PathVariable int id, @PathVariable boolean enabled) {
 		userService.setEnabled(id, enabled);
 		return ResponseEntity.status(HttpStatus.OK).build();
@@ -60,7 +60,7 @@ public class UserController {
 	}
 
 	@GetMapping(value = "/{id}")
-	@ApiOperation(value = "Get user by id")
+	@ApiOperation(value = "Get user by ID")
 	public ResponseEntity<UserDTO> getUserById(@PathVariable int id) {
 
 		User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
@@ -78,7 +78,7 @@ public class UserController {
 	}
 
 	@GetMapping(value = "/roles")
-	@ApiOperation(value = "Get user's role")
+	@ApiOperation("Get user roles")
 	public ResponseEntity<List<?>> getUsersRole() {
 
 		return new ResponseEntity<List<?>>(Arrays.asList(Role.values()), HttpStatus.OK);

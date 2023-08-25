@@ -1,7 +1,7 @@
 package backend.Marine.units.service;
 
+import backend.Marine.units.dto.UserDTO;
 import backend.Marine.units.entity.User;
-import dto.UserDTO;
 
 public interface UserService {
 

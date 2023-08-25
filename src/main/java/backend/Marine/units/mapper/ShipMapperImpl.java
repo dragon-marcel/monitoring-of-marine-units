@@ -17,15 +17,14 @@ public class ShipMapperImpl implements ShipMapper {
 			return null;
 		}
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-		Date date = null;
+		Date timestamp = null;
 		try {
-			date = dateFormat.parse(track.getTimeStamp());
+			timestamp = dateFormat.parse(track.getTimeStamp());
 		} catch (ParseException e) {
-			e.printStackTrace();
+			throw new IllegalArgumentException("Invalid timestamp format: " + track.getTimeStamp(), e);
 		}
-
 		Point point = new Point(track.getGeometry().getCoordinates().get(1),
-				track.getGeometry().getCoordinates().get(0), date);
+				track.getGeometry().getCoordinates().get(0), timestamp);
 
 		Ship ship = new Ship();
 		ship.setMmsi(track.getMmsi());

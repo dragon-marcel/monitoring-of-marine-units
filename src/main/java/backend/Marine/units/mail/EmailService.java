@@ -24,7 +24,7 @@ public class EmailService {
 
 	private final String TEMPLATE = "ship_email_template";
 
-	public void sendSimpleMessage(User user, Ship ship, String subject, String text) {
+	public void sendSimpleMessage(User user, Ship ship, String subject) {
 
 		MimeMessage message = emailSender.createMimeMessage();
 		MimeMessageHelper helper;
@@ -47,7 +47,7 @@ public class EmailService {
 			helper.setTo(user.getEmail());
 			helper.setText(html, true);
 			helper.setSubject(subject);
-			helper.setFrom("dragon@o2.pl");
+			helper.setFrom(" dragon.marcel8989@gmail.com");
 		} catch (MessagingException e) {
 			e.printStackTrace();
 		}

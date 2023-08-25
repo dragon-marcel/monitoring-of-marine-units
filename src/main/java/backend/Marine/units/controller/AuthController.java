@@ -1,4 +1,4 @@
-package backend.Marine.units.contoler;
+package backend.Marine.units.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,21 +22,22 @@ public class AuthController {
 
 	private final AuthenticationManager authorizationManager;
 
-	private final JWTService jWTService;
+	private final JWTService jwtService;
 
-	public AuthController(AuthenticationManager authorizationManager, JWTService jWTService, UserRepository ur) {
+	public AuthController(AuthenticationManager authorizationManager, JWTService jwtService,
+			UserRepository userRepository) {
 		this.authorizationManager = authorizationManager;
-		this.jWTService = jWTService;
+		this.jwtService = jwtService;
 	}
 
 	@PostMapping("/api/auth")
-	@ApiOperation(value = "Login to system and get token")
-	public ResponseEntity<?> getJWT(@RequestBody AuthRequest authRequest) {
+	@ApiOperation(value = "Login to the system and get an authentication token")
+	public ResponseEntity<?> authenticateAndGenerateToken(@RequestBody AuthRequest authRequest) {
 		try {
 			Authentication authenticate = authorizationManager.authenticate(
 					new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
 			User user = (User) authenticate.getPrincipal();
-			String token = jWTService.createToken(authenticate);
+			String token = jwtService.createToken(authenticate);
 			AuthResponse authResponse = new AuthResponse(user.getUsername(), token);
 			return new ResponseEntity<AuthResponse>(authResponse, HttpStatus.OK);
 		} catch (UsernameNotFoundException ex) {

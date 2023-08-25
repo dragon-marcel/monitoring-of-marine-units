@@ -1,10 +1,9 @@
-package backend.Marine.units.contoler;
+package backend.Marine.units.controller;
 
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +17,6 @@ import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping(value = "/api/ships")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ShipController {
 	private final ShipRepository shipRepository;
 	private final ShipService shipService;
@@ -28,7 +26,6 @@ public class ShipController {
 		this.shipService = shipService;
 	}
 
-	@GetMapping()
 	@ApiOperation(value = "Get all ships")
 	public ResponseEntity<List<Ship>> getShips() {
 		List<Ship> ships = shipRepository.findAll();
@@ -54,8 +51,8 @@ public class ShipController {
 	}
 
 	@PostMapping("/username/{username}/mmsi/{mmsi}/remove")
-	@ApiOperation(value = "Delete tracked ship")
-	public ResponseEntity<?> deleteTrackedShip(@PathVariable int mmsi, @PathVariable String username) {
+	@ApiOperation(value = "Remove tracked ship")
+	public ResponseEntity<?> removeTrackedShip(@PathVariable int mmsi, @PathVariable String username) {
 		shipService.deleteTrackedShip(username, mmsi);
 		return ResponseEntity.status(HttpStatus.OK).build();
 
@@ -63,9 +60,9 @@ public class ShipController {
 
 	@GetMapping("/{username}")
 	@ApiOperation(value = "Get tracked ships by username")
-	public ResponseEntity<List<Ship>> getTracketShipsByUsername(@PathVariable String username) {
-		List<Ship> ships = shipRepository.findTrackedShipsByUsername(username);
-		return new ResponseEntity<List<Ship>>(ships, HttpStatus.OK);
+	public ResponseEntity<List<Ship>> getTrackedShipsByUsername(@PathVariable String username) {
+		List<Ship> trackedShips = shipRepository.findTrackedShipsByUsername(username);
+		return new ResponseEntity<List<Ship>>(trackedShips, HttpStatus.OK);
 	}
 
 }

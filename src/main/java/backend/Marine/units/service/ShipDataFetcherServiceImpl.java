@@ -22,17 +22,17 @@ import backend.Marine.units.model.TrackShip;
 
 @Service
 @EnableScheduling
-public class ShipApiServiceImpl implements ShipApiService {
+public class ShipDataFetcherServiceImpl implements ShipDataFetcherService {
 	private final AtomicReference<String> apiClientId = new AtomicReference<>();
 	private final AtomicReference<String> apiSecret = new AtomicReference<>();
 	private final AtomicReference<String> accessToken = new AtomicReference<>();
 	private final String AUTHENTICATION_URL = "https://id.barentswatch.no/connect/token";
-	private final RestTemplate TEMPLATE = new RestTemplate();
-	private final ShipService shipService;
+	private final RestTemplate restTemplate = new RestTemplate();
+	private final ShipServiceImpl shipService;
 	private Area arena;
 
-	public ShipApiServiceImpl(@Value("${security.SHIP_client_id}") String clientId,
-			@Value("${security.SHIP_client_secret}") String clientSecret, ShipService shipService) throws Exception {
+	public ShipDataFetcherServiceImpl(@Value("${security.SHIP_client_id}") String clientId,
+			@Value("${security.SHIP_client_secret}") String clientSecret, ShipServiceImpl shipService) throws Exception {
 
 		if (clientId == null || clientSecret == null)
 			throw new Exception("No SHIP secret or clientId in environment.");
@@ -46,8 +46,8 @@ public class ShipApiServiceImpl implements ShipApiService {
 	}
 
 	@Scheduled(initialDelay = 3_000_000, fixedDelay = 3_000_000)
-	private void getAccessToken() {
-		// System.out.println("Refresh token111111");
+	@Override
+	public void getAccessToken() {
 
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -58,8 +58,9 @@ public class ShipApiServiceImpl implements ShipApiService {
 		body.add("client_secret", apiSecret.get());
 		body.add("grant_type", "client_credentials");
 
-		HttpEntity entity = new HttpEntity(body, httpHeaders);
-		ResponseEntity response = TEMPLATE.exchange(AUTHENTICATION_URL, HttpMethod.POST, entity, Map.class);
+		HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<MultiValueMap<String, String>>(body,
+				httpHeaders);
+		ResponseEntity<Map> response = restTemplate.exchange(AUTHENTICATION_URL, HttpMethod.POST, entity, Map.class);
 		LinkedHashMap<String, String> responseBody = (LinkedHashMap<String, String>) response.getBody();
 		String token = (String) responseBody.get("access_token");
 
@@ -71,17 +72,16 @@ public class ShipApiServiceImpl implements ShipApiService {
 	}
 
 	@Scheduled(fixedRate = 20000)
-	private void fetchsHipFromArea() {
+	public void fetchShipsFromArea() {
 		fetchShip(getArea());
 	}
 
-	private void fetchShip(Area area) {
+	@Override
+	public void fetchShip(Area area) {
 
-		RestTemplate restTemplate = new RestTemplate();
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.add("Authorization", "Bearer " + accessToken.get());
-		HttpEntity httpEntity = new HttpEntity(httpHeaders);
-		// System.out.println("SSSSSSSSSSS +" + httpEntity.toString());
+		HttpEntity<?> httpEntity = new HttpEntity(httpHeaders);
 		ResponseEntity<TrackShip[]> exchange = restTemplate.exchange(
 				"https://www.barentswatch.no/bwapi/v2/geodata/ais/openpositions?Xmin=" + getArea().getFromX() + "&Xmax="
 						+ getArea().getToX() + "&Ymin=" + getArea().getFromY() + "&Ymax=" + getArea().getToY(),
@@ -93,11 +93,13 @@ public class ShipApiServiceImpl implements ShipApiService {
 		shipService.trackShipParsetoShips(tracks);
 	}
 
-	private Area getArea() {
+	@Override
+	public Area getArea() {
 		return arena;
 	}
 
-	private void setArena() {
+	@Override
+	public void setArena() {
 		arena = new Area(10.09094, 63.3989, 10.67047, 63.58645);
 	}
 }

@@ -22,9 +22,7 @@ import backend.Marine.units.jwt.JWTTokenFilter;
 public class SecurityConfig {
 
 	private AuthenticationManager authenticationManager;
-
 	private AuthSuccessHandler authSuccessHandler;
-
 	private AuthFailureHandler authFailureHandler;
 
 	private final JWTTokenFilter jwtTokenFilter;
@@ -49,9 +47,9 @@ public class SecurityConfig {
 
 		http.csrf().disable();
 		http.cors().configurationSource(request -> configuration);
-		http.authorizeRequests().antMatchers(AUTH_WHITELIST).permitAll().antMatchers("/hello").hasRole("USER")
-				.anyRequest().authenticated().and().sessionManagement()
-				.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().addFilter(authenticationFilter());
+		http.authorizeRequests().antMatchers(AUTH_WHITELIST).permitAll().anyRequest().authenticated().and()
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+				.addFilter(authenticationFilter());
 
 		http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
 		return http.build();

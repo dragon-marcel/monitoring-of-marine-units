@@ -1,4 +1,4 @@
-package backend.Marine.units.contoler;
+package backend.Marine.units.controller;
 
 import java.util.List;
 
@@ -16,58 +16,58 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping(value = "/api/chart")
 public class ChartController {
-	private final ChartShipService ChartShipService;
+	private final ChartShipService chartShipService;
 
-	public ChartController(ChartShipService ChartShipService) {
-		this.ChartShipService = ChartShipService;
+	public ChartController(ChartShipService chartShipService) {
+		this.chartShipService = chartShipService;
 	}
 
 	@GetMapping("/type")
-	@ApiOperation(value = "Get weather by lat lon")
+	@ApiOperation("Get data for ship type chart")
 	public ResponseEntity<List<ChartShip>> getDataShipTypeChart() {
-		List<ChartShip> charData = ChartShipService.getDataShipTypeChart();
+		List<ChartShip> charData = chartShipService.getDataShipTypeChart();
 		return new ResponseEntity<List<ChartShip>>(charData, HttpStatus.OK);
 	}
 
 	@GetMapping("/line")
-	@ApiOperation(value = "Get weather by lat lon")
+	@ApiOperation("Get data for ship line chart")
 	public ResponseEntity<List<ChartShip>> getDataShipLineChart() {
-		List<ChartShip> charData = ChartShipService.getCountShipByHour();
+		List<ChartShip> charData = chartShipService.getCountShipByHour();
 		return new ResponseEntity<List<ChartShip>>(charData, HttpStatus.OK);
 	}
 
-	@GetMapping("/amount/inarea")
-	@ApiOperation(value = "Get weather by lat lon")
+	@GetMapping("/amount/in_area")
+	@ApiOperation("Get count of ships in the specified area")
 	public ResponseEntity<Integer> getCoutnShipInArea() {
-		int amountShipInArea = ChartShipService.getCountShipInArea();
+		int amountShipInArea = chartShipService.getCountShipInArea();
 		return new ResponseEntity<Integer>(amountShipInArea, HttpStatus.OK);
 	}
 
 	@GetMapping("/amount/tracked/{username}")
-	@ApiOperation(value = "Get weather by lat lon")
+	@ApiOperation("Get count of ships tracked by username")
 	public ResponseEntity<Integer> getCountShipTracked(@PathVariable String username) {
-		int amountShipTracked = ChartShipService.getCountShipTracked(username);
+		int amountShipTracked = chartShipService.getCountShipTracked(username);
 		return new ResponseEntity<Integer>(amountShipTracked, HttpStatus.OK);
 	}
 
-	@GetMapping("/amount/outarea")
-	@ApiOperation(value = "Get weather by lat lon")
+	@GetMapping("/amount/out_area")
+	@ApiOperation("Get count of ships out of the specified area")
 	public ResponseEntity<Integer> getCoutnShipOutArea() {
-		int amountShipOutArea = ChartShipService.getCountShipOutArea();
+		int amountShipOutArea = chartShipService.getCountShipOutArea();
 		return new ResponseEntity<Integer>(amountShipOutArea, HttpStatus.OK);
 	}
 
 	@GetMapping("/amount/movable")
-	@ApiOperation(value = "Get weather by lat lon")
+	@ApiOperation("Get count of movable ships")
 	public ResponseEntity<Integer> getCoutnShipMovable() {
-		int amountShipOutArea = ChartShipService.getCountShipMovable();
+		int amountShipOutArea = chartShipService.getCountShipMovable();
 		return new ResponseEntity<Integer>(amountShipOutArea, HttpStatus.OK);
 	}
 
 	@GetMapping("/amount/unmovable")
-	@ApiOperation(value = "Get weather by lat lon")
+	@ApiOperation("Get count of unmovable ships")
 	public ResponseEntity<Integer> getCoutnShipUnMovable() {
-		int amountShipOutArea = ChartShipService.getCountShipUnMovable();
+		int amountShipOutArea = chartShipService.getCountShipUnMovable();
 		return new ResponseEntity<Integer>(amountShipOutArea, HttpStatus.OK);
 	}
 }

@@ -1,4 +1,4 @@
-package backend.Marine.units.contoler;
+package backend.Marine.units.controller;
 
 import java.util.List;
 
@@ -23,10 +23,10 @@ public class TypeController {
 	}
 
 	@GetMapping
-	@ApiOperation(value = "Get all type of ship")
-	public ResponseEntity<List<Type>> geType() {
-		List<Type> type = typeRepository.findAll();
+	@ApiOperation("Get all ship types")
+	public ResponseEntity<List<Type>> getAllShipTypes() {
+		List<Type> shipTypes = typeRepository.findAll();
 
-		return new ResponseEntity<List<Type>>(type, HttpStatus.OK);
+		return new ResponseEntity<List<Type>>(shipTypes, HttpStatus.OK);
 	}
 }

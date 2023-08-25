@@ -1,4 +1,4 @@
-package dto;
+package backend.Marine.units.dto;
 
 import lombok.Data;
 
