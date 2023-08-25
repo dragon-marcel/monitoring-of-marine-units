@@ -2,7 +2,7 @@ package backend.Marine.units.utils;
 
 import backend.Marine.units.entity.Ship;
 
-public class Utils {
+public final class Utils {
 
 	private final static double RADIUS = 6371;
 

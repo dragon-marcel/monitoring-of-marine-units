@@ -16,12 +16,11 @@ import backend.Marine.units.entity.Point;
 import backend.Marine.units.entity.Ship;
 import backend.Marine.units.utils.Utils;
 
-public class UtlisTest {
+public class UtilsTest {
 
 	@Test
 	public void should_get_speed() {
 		// given
-		double time = 60000;// ms
 		double distance = 1;// km
 		// when
 		// then
@@ -37,9 +36,7 @@ public class UtlisTest {
 		double distance = 1;// km
 		// when
 		// then
-		assertThrows(IllegalArgumentException.class, () -> {
-			Utils.calculateSpeedInKmH(distance, time);
-		});
+		assertThrows(IllegalArgumentException.class, () -> Utils.calculateSpeedInKmH(distance, time));
 	}
 
 	@Test
@@ -67,5 +64,16 @@ public class UtlisTest {
 
 		// then
 		assertEquals(5.967064416905403E-4, distance, 0.001);
+	}
+
+	@Test
+	public void should_get_time_difference_in_milliseconds(){
+		//given
+		long timeEnd = 1692993577713L;
+		long timeStart = 1692961472000L;
+		//when
+		double difference= Utils.getTimeDifferenceInMilliseconds(timeEnd,timeStart);
+		//then
+		assertEquals(difference,32105713);
 	}
 }

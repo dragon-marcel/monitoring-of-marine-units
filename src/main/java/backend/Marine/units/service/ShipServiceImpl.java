@@ -101,7 +101,9 @@ public class ShipServiceImpl implements ShipService {
 			existingShip.setDistance(Utils.getDistance(existingShip));
 			double timeMS = Utils.getTimeDifferenceInMilliseconds(System.currentTimeMillis(),
 					(existingShip.getTrack().get(existingShip.getTrack().size() - 2).getCreateDateTime().getTime()));
+			System.out.println("TIME1:"+ System.currentTimeMillis() + "   "+ (existingShip.getTrack().get(existingShip.getTrack().size() - 2).getCreateDateTime().getTime()));
 
+			System.out.println("TIME:"+ timeMS);
 			existingShip.setSpeed(Utils.calculateSpeedInKmH(existingShip.getDistance(), timeMS));
 		}
 		return shipRepository.save(existingShip);
