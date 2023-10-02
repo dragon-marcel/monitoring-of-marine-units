@@ -1,4 +1,5 @@
 <h1><b>System Monitoringu Jednostek Morskich </b></h1>
+
 [![Watch the video](https://img.youtube.com/vi/BxgV89NuF4I/maxresdefault.jpg)](https://www.youtube.com/watch?v=BxgV89NuF4I)
 
 System Monitoringu Jednostek Morskich to aplikacja umożliwiająca monitorowanie jednostek morskich w czasie rzeczywistym. Wykorzystuje różne technologie, w tym język Java, do dostarczenia funkcji takich jak śledzenie statków,generowanie wkresów oraz raportów,analizą danych,obserwacji historii statków, zarządzanie użytkownikami,udostępnianie interfejsu REST API itd. Poniżej znajduje się krótki opis kluczowych aspektów projektu.
