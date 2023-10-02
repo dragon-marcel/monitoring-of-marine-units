@@ -1,3 +1,4 @@
+
 INSERT INTO TYPE_SHIP (ID,DESCRIPTION) VALUES (1,'Reserved for future use');
 INSERT INTO TYPE_SHIP (ID,DESCRIPTION) VALUES (20,'Wing in ground (WIG), all ships of this type');
 INSERT INTO TYPE_SHIP (ID,DESCRIPTION) VALUES (21,'Wing in ground (WIG), Hazardous category A');
