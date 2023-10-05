@@ -1,37 +1,28 @@
 package backend.Marine.units.entity;
 
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import backend.Marine.units.mail.EmailService;
 import backend.Marine.units.mail.EmailServiceContext;
 import backend.Marine.units.mail.ShipMailObserver;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
 
 @Data
 @Builder
 @Entity
 @AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "users")
 public class User implements Serializable, UserDetails, ShipMailObserver {
 
@@ -40,7 +31,8 @@ public class User implements Serializable, UserDetails, ShipMailObserver {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false,
+			unique = true)
 	private String username;
 
 	@Column(nullable = false)
@@ -48,7 +40,8 @@ public class User implements Serializable, UserDetails, ShipMailObserver {
 
 	@Enumerated(EnumType.STRING)
 	private Role role;
-
+	@Column(nullable = false,
+			unique = true)
 	private String email;
 
 	private boolean enabled;
@@ -59,19 +52,6 @@ public class User implements Serializable, UserDetails, ShipMailObserver {
 	@CreatedDate
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdDate;
-
-	public User() {
-	}
-
-	public User(String username, String encodePassword, String email, String role, boolean enable, String avatar) {
-		this.username = username;
-		this.password = encodePassword;
-		this.role = Role.valueOf(role);
-		this.enabled = enable;
-		this.email = email;
-		this.avatar = avatar;
-
-	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -183,5 +163,6 @@ public class User implements Serializable, UserDetails, ShipMailObserver {
 		emailService.sendSimpleMessage(this, ship, subject);
 
 	}
+
 
 }

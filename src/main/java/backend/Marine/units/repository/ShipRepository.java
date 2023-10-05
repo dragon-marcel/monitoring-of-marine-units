@@ -28,4 +28,6 @@ public interface ShipRepository extends JpaRepository<Ship, Integer> {
 	@Query(value = "SELECT s FROM Ship s WHERE s.active = false and s.inArea = true")
 	List<Ship> findAllUnMovable();
 
+
+
 }

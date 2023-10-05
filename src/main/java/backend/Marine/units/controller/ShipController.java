@@ -2,6 +2,7 @@ package backend.Marine.units.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,22 +15,24 @@ import backend.Marine.units.entity.Ship;
 import backend.Marine.units.repository.ShipRepository;
 import backend.Marine.units.service.ShipService;
 import io.swagger.annotations.ApiOperation;
-
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @RestController
 @RequestMapping(value = "/api/ships")
 public class ShipController {
 	private final ShipRepository shipRepository;
 	private final ShipService shipService;
-
+	@Autowired
 	public ShipController(ShipRepository shipRepository, ShipService shipService) {
 		this.shipRepository = shipRepository;
 		this.shipService = shipService;
 	}
 
 	@ApiOperation(value = "Get all ships")
+	@GetMapping
 	public ResponseEntity<List<Ship>> getShips() {
 		List<Ship> ships = shipRepository.findAll();
-
+		log.info("new customer registration {}",ships);
 		return new ResponseEntity<List<Ship>>(ships, HttpStatus.OK);
 	}
 

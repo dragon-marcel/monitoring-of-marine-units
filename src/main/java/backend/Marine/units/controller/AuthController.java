@@ -1,5 +1,6 @@
 package backend.Marine.units.controller;
 
+import backend.Marine.units.dto.WeatherDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -41,6 +42,10 @@ public class AuthController {
 		} catch (UsernameNotFoundException ex) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
+	}
+	@PostMapping
+	public ResponseEntity<WeatherDTO> create (@RequestBody WeatherDTO weather){
+		return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 	}
 
 }

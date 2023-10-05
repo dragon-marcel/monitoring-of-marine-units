@@ -1,4 +1,4 @@
-package utils;
+package backend.Marine.units.utils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test;
 
 import backend.Marine.units.entity.Point;
 import backend.Marine.units.entity.Ship;
-import backend.Marine.units.utils.Utils;
 
 public class UtilsTest {
 
@@ -23,7 +22,7 @@ public class UtilsTest {
 		// given
 		double distance = 1;// km
 		// when
-		// then
+		//0 then
 		assertEquals(60, Utils.calculateSpeedInKmH(distance, 60000));
 		assertEquals(30, Utils.calculateSpeedInKmH(distance, 120000));
 		assertNotEquals(10, Utils.calculateSpeedInKmH(distance, 120000));

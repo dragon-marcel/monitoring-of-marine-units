@@ -22,7 +22,7 @@ public class AuthFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException exception) throws IOException, ServletException {
 		Map<String, Object> body = new HashMap<>();
-		body.put("message", "Error,incorect password or username");
+		body.put("message", "Error,incorrect password or username");
 		body.put("status", HttpStatus.UNAUTHORIZED);
 		body.put("timestamp", LocalDateTime.now().toString());
 		response.getWriter().write(new ObjectMapper().writeValueAsString(body));

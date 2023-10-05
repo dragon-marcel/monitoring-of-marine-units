@@ -18,7 +18,6 @@ import backend.Marine.units.jwt.JWTAuthenticationFilter;
 import backend.Marine.units.jwt.JWTTokenFilter;
 
 @Configuration
-
 public class SecurityConfig {
 
 	private final AuthenticationManager authenticationManager;

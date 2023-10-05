@@ -1,4 +1,5 @@
 package backend.Marine.units.service;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -10,25 +11,25 @@ import backend.Marine.units.model.Area;
 import backend.Marine.units.model.TrackShip;
 
 @Service
-public class ShipDataFetcherServiceImpl {
+public class ShipDataServiceImpl implements ShipDataService{
 	private final RestTemplate restTemplate = new RestTemplate();
 	private final String SHIP_API_URL = "https://www.barentswatch.no/bwapi/v2/geodata/ais/openpositions";
 	private final ShipAuthorizationService shipAuthorizationService;
 	private final ShipService shipService;
-	public ShipDataFetcherServiceImpl(ShipAuthorizationService shipAuthorizationService,ShipService shipService){
+	@Autowired
+	public ShipDataServiceImpl(ShipAuthorizationService shipAuthorizationService, ShipService shipService){
 		this.shipAuthorizationService = shipAuthorizationService;
 		this.shipService =shipService;
 
 	}
+	@Override
 	public void fetchShip(Area area) {
 		HttpHeaders httpHeaders = createHttpHeaders();
 		ResponseEntity<TrackShip[]> exchange = restTemplate.exchange(createUrl(area),
 				HttpMethod.GET, new HttpEntity(httpHeaders), TrackShip[].class);
 
 		TrackShip[] tracks = exchange.getBody();
-		System.out.println("Refresh ships: " + tracks.length);
-
-		shipService.trackShipParsetoShips(tracks);
+		shipService.trackShipParseToShips(tracks);
 	}
 	private HttpHeaders createHttpHeaders() {
 		HttpHeaders httpHeaders = new HttpHeaders();

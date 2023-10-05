@@ -1,5 +1,9 @@
 package backend.Marine.units.service;
 
+import backend.Marine.units.dto.WeatherDTO;
+import backend.Marine.units.mapper.WeatherMapper;
+import backend.Marine.units.model.weather.WeatherConditions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -8,15 +12,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import backend.Marine.units.dto.WeatherDTO;
-import backend.Marine.units.mapper.WeatherMapper;
-import backend.Marine.units.model.weather.WeatherConditions;
-
 @Service
 public class WeatherDataFetcherServiceImpl implements WeatherDataFetcherService {
 	private static final String WEATHER_URL = "http://api.openweathermap.org/data/2.5/";
 	private final String OPEN_WEATHER_API_KEY;
 	private final RestTemplate REST_TEMPLATE = new RestTemplate();
+	@Autowired
 	public WeatherDataFetcherServiceImpl(@Value("${weather.api.key}") String APIKey) {
 		this.OPEN_WEATHER_API_KEY = APIKey;
 	}

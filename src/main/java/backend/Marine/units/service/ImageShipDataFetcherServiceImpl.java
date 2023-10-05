@@ -12,13 +12,13 @@ import net.minidev.json.parser.JSONParser;
 public class ImageShipDataFetcherServiceImpl implements ImageShipDataFetcherService {
 
 	private static final String GOOGLE_API_KEY = "AIzaSyAMe2Lsp_78d1e6juctpFSJZINfWFr43rc";
+	RestTemplate restTemplate = new RestTemplate();
 
 	@Override
 	public String getGoogleSearchEngineForImagePathOfQuery(String mmsi) {
 
 		String url = "https://customsearch.googleapis.com/customsearch/v1?cx=9de8e229296fe6e53&q=mmsi " + mmsi + "&key="
 				+ GOOGLE_API_KEY;
-		RestTemplate restTemplate = new RestTemplate();
 
 		@SuppressWarnings("deprecation")
 		JSONParser parser = new JSONParser();

@@ -3,12 +3,12 @@ package backend.Marine.units.service;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
-import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import backend.Marine.units.entity.Point;
@@ -16,8 +16,6 @@ import backend.Marine.units.entity.Ship;
 import backend.Marine.units.entity.Type;
 import backend.Marine.units.entity.User;
 import backend.Marine.units.exception.UserNotFoundException;
-import backend.Marine.units.mail.ContainerObserverShip;
-import backend.Marine.units.mail.ShipMailObserver;
 import backend.Marine.units.mapper.ShipMapper;
 import backend.Marine.units.model.TrackShip;
 import backend.Marine.units.repository.ShipRepository;
@@ -29,28 +27,31 @@ import backend.Marine.units.utils.Utils;
 public class ShipServiceImpl implements ShipService {
 	private final ShipRepository shipRepository;
 	private final UserRepository userRepository;
-	private final ContainerObserverShip observer;
+	private final ShipMessagingService shipMessagingService;
 	private final ImageShipDataFetcherService imageShipApiService;
 	private final TypeRepository typeRepository;
-	private final SimpMessagingTemplate template;
 
-	public ShipServiceImpl(ShipRepository shipRepository, UserRepository userRepository, ContainerObserverShip observer,
-			ImageShipDataFetcherService imimageShipApiService, SimpMessagingTemplate template,
-			TypeRepository typeRepository) {
+	@Autowired
+	public ShipServiceImpl(ShipRepository shipRepository, UserRepository userRepository, ShipMessagingService shipMessagingService,
+			ImageShipDataFetcherService imageShipApiService,TypeRepository typeRepository) {
 		this.shipRepository = shipRepository;
 		this.userRepository = userRepository;
-		this.observer = observer;
-		this.imageShipApiService = imimageShipApiService;
-		this.template = template;
+		this.shipMessagingService = shipMessagingService;
+		this.imageShipApiService = imageShipApiService;
 		this.typeRepository = typeRepository;
 	}
 
-	public void trackShipParsetoShips(TrackShip[] tracks) {
+	public void trackShipParseToShips(TrackShip[] tracks) {
 		List<Ship> ships = shipRepository.findAll();
 		List<Ship> newShips = handleTrackShips(tracks);
 		updateShipOutAreaStatus(ships, newShips);
-		sendShipsInAreaToWebSocket(ships);
-		sendShipsTrackedByUserName();
+		shipMessagingService.sendShipsInAreaToWebSocket(ships);
+
+		List<User> users = userRepository.findAll();
+		users.forEach(user -> {
+			List<Ship> shipsTrackedByUserName = shipRepository.findTrackedShipsByUsername(user.getUsername());
+			shipMessagingService.sendShipsTrackedByUserName(user.getUsername(),shipsTrackedByUserName);
+		});
 	}
 
 	private List<Ship> handleTrackShips(TrackShip[] tracks) {
@@ -86,45 +87,21 @@ public class ShipServiceImpl implements ShipService {
 		ship.setType(type);
 		ship.setImg(url);
 		shipRepository.save(ship);
-		sendInfoStatusToWebSocket(ship.getMmsi(), "in");
-		notifyObservers(ship);
+		shipMessagingService.sendInfoStatusToWebSocket(ship.getMmsi(), "in");
+		shipMessagingService.notifyObservers(ship);
 		return ship;
 	}
 
 	private Ship handleExistingShip(Ship existingShip, Ship currentShip) {
-		existingShip.setActive(isActive(currentShip.getCurrentPoint(), getLastPoint(existingShip.getTrack())));
+		existingShip.setActive(isActiveShip(currentShip.getCurrentPoint(), getLastShipPosition(existingShip.getTrack())));
 		existingShip.setCurrentPoint(currentShip.getCurrentPoint());
 		existingShip.addPoint(currentShip.getCurrentPoint());
 		existingShip.setInArea(true);
+		existingShip.setDistance(Utils.getDistance(existingShip));
+		existingShip.setSpeed(calculateSpeedShipInKmH(existingShip));
 
-		if (existingShip.getTrack().size() > 2) {
-			existingShip.setDistance(Utils.getDistance(existingShip));
-			double timeMS = Utils.getTimeDifferenceInMilliseconds(System.currentTimeMillis(),
-					(existingShip.getTrack().get(existingShip.getTrack().size() - 2).getCreateDateTime().getTime()));
-			existingShip.setSpeed(Utils.calculateSpeedInKmH(existingShip.getDistance(), timeMS));
-		}
 		return shipRepository.save(existingShip);
 	}
-
-	private void notifyObservers(Ship ship) {
-		Set<ShipMailObserver> observers = observer.getObserversShip();
-		observers.forEach(observer -> observer.notifyAboutShipEvent(ship));
-	}
-
-	private void sendShipsTrackedByUserName() {
-		List<User> users = userRepository.findAll();
-		users.forEach(user -> {
-			List<Ship> ships = shipRepository.findTrackedShipsByUsername(user.getUsername());
-			template.convertAndSend("/topic/ships/tracked/" + user.getUsername(), ships);
-		});
-
-	}
-
-	private void sendShipsInAreaToWebSocket(List<Ship> ships) {
-		List<Ship> shipsInArea = ships.stream().filter(Ship::isInArea).collect(Collectors.toList());
-		template.convertAndSend("/topic/ships", shipsInArea);
-	}
-
 	private void updateShipOutAreaStatus(List<Ship> ships, List<Ship> newShips) {
 		ships.forEach(ship -> {
 
@@ -133,20 +110,32 @@ public class ShipServiceImpl implements ShipService {
 			if (!stillInArea && ship.isInArea()) {
 				ship.setInArea(false);
 				shipRepository.save(ship);
-				sendInfoStatusToWebSocket(ship.getMmsi(), "out");
+				shipMessagingService.sendInfoStatusToWebSocket(ship.getMmsi(), "out");
 			}
 		});
 	}
+	private int calculateSpeedShipInKmH(Ship ship){
+		List<Point> track = ship.getTrack();
+		if (track.size() <= 1)
+			return 0;
 
-	private void sendInfoStatusToWebSocket(int mmsi, String statusMessage) {
-		template.convertAndSend("/topic/info", "Ship mmsi: " + mmsi + " " + statusMessage + " area.");
+		double time = Utils.getTimeDifferenceInMilliseconds(System.currentTimeMillis(), getTimeSecondLastShipPosition(ship));
+		double distance = Optional.of(ship.getDistance()).orElse(0.0);
+		return Utils.calculateSpeedInKmH(distance, time);
 	}
-
-	private boolean isActive(Point currentPoint, Point lastPoint) {
+	private Long getTimeSecondLastShipPosition(Ship ship) {
+		List<Point> track = ship.getTrack();
+		if (track.size() < 2) {
+			throw new IllegalArgumentException("Ship track should have at least two points.");
+		}
+		Point point = ship.getTrack().get(ship.getTrack().size() - 2);
+		return point.getCreateDateTime().getTime();
+	}
+	private boolean isActiveShip(Point currentPoint, Point lastPoint) {
 		return lastPoint != null && !currentPoint.equals(lastPoint);
 	}
 
-	public Point getLastPoint(List<Point> points) {
+	public Point getLastShipPosition(List<Point> points) {
 		return points == null || points.isEmpty() ? null : points.get(points.size() - 1);
 	}
 

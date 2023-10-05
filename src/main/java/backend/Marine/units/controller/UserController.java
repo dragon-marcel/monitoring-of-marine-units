@@ -76,20 +76,4 @@ public class UserController {
 
 		return new ResponseEntity<List<UserDTO>>(users, HttpStatus.OK);
 	}
-
-	@GetMapping(value = "/roles")
-	@ApiOperation("Get user roles")
-	public ResponseEntity<List<?>> getUsersRole() {
-
-		return new ResponseEntity<List<?>>(Arrays.asList(Role.values()), HttpStatus.OK);
-	}
-
-//	@PatchMapping("/{username}/{mmsi}")
-//	@ApiOperation(value = "Add tracked ship")
-//	public ResponseEntity<?> trackedShip(@PathVariable int mmsi, @PathVariable String username) {
-//		userService.addTrackedShip(username, mmsi);
-//
-//		return ResponseEntity.status(HttpStatus.OK).build();
-//
-//	}
 }

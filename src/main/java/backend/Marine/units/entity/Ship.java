@@ -5,20 +5,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -29,7 +21,7 @@ import lombok.NoArgsConstructor;
 public class Ship {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@NotNull
 	private int mmsi;
@@ -40,14 +32,21 @@ public class Ship {
 	private String destination;
 	private String img;
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+
 	private List<Point> track = new ArrayList<Point>();
 	private boolean inArea;
 	private boolean active;
 	@OneToOne
+	@JoinColumn(name = "type_id")
 	private Type type;
 	private Double distance;
 	private int speed;
 	@ManyToMany()
+	@JoinTable(
+			name = "ships_tracked_by", // Nazwa tabeli łączącej
+			joinColumns = @JoinColumn(name = "ship_id"),
+			inverseJoinColumns = @JoinColumn(name = "user_id")
+	)
 	@JsonIgnore
 	private Set<User> trackedBy = new HashSet<>();
 
@@ -69,9 +68,21 @@ public class Ship {
 
 	@Override
 	public String toString() {
-		return "Ship [id=" + id + ", mmsi=" + mmsi + ", name=" + name + ", shipType=" + type.getDescription()
-				+ ", currentPoint=" + currentPoint + ", country=" + country + ", destination=" + destination
-				+ ", track=" + track + ", inArea=" + inArea + ", active=" + active + "]";
+		return "Ship{" +
+				"id=" + id +
+				", mmsi=" + mmsi +
+				", name='" + name + '\'' +
+				", currentPoint=" + currentPoint +
+				", country='" + country + '\'' +
+				", destination='" + destination + '\'' +
+				", img='" + img + '\'' +
+				", track=" + track +
+				", inArea=" + inArea +
+				", active=" + active +
+				", type=" + type +
+				", distance=" + distance +
+				", speed=" + speed +
+				", trackedBy=" + trackedBy +
+				'}';
 	}
-
 }

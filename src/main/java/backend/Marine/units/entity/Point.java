@@ -25,12 +25,16 @@ public class Point {
 	private double xCoordinate, yCoordinate;
 	private Date createDateTime;
 
+	public Point(double xCoordinate, double yCoordinate) {
+		this.xCoordinate = xCoordinate;
+		this.yCoordinate = yCoordinate;
+	}
+
 	public Point(double xCoordinate, double yCoordinate, Date createDateTime) {
 		this.xCoordinate = xCoordinate;
 		this.yCoordinate = yCoordinate;
 		this.createDateTime = createDateTime;
 	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;

@@ -1,5 +1,7 @@
 package backend.Marine.units.service;
 
+import backend.Marine.units.entity.Role;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,7 +20,7 @@ public class UserServiceImpl implements UserService {
 	private final PasswordEncoder passwordEncoder;
 	private final UserRepository userRepository;
 	private final ContainerObserverShip containerObserverShip;
-
+	@Autowired
 	public UserServiceImpl(PasswordEncoder passwordEncoder, UserRepository userRepository,
 			ContainerObserverShip containerObserverShip) {
 		this.passwordEncoder = passwordEncoder;
@@ -28,8 +30,13 @@ public class UserServiceImpl implements UserService {
 
 	@EventListener(ApplicationReadyEvent.class)
 	public void saveTestUser() {
-		// test user
-		User user = new User("admin", passwordEncoder.encode("admin"), "dragon.marcel@o2.pl", "ADMIN", true, "1");
+		User user = User.builder().username("admin").
+				password(passwordEncoder.encode("admin")).
+				email("dragon.marcel@o2.pl").
+				role(Role.ADMIN).
+				enabled(true).
+				avatar("").
+				build();
 		userRepository.save(user);
 		containerObserverShip.addObserverShip(user);
 

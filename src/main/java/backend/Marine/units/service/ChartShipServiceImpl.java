@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import backend.Marine.units.entity.Ship;
@@ -23,7 +24,7 @@ public class ChartShipServiceImpl implements ChartShipService {
 	private final ShipRepository shipRepository;
 
 	private final int HOUR_RANGE = 5;
-
+	@Autowired
 	public ChartShipServiceImpl(ShipRepository shipRepository) {
 		this.shipRepository = shipRepository;
 	}
